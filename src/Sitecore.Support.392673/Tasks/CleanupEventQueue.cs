@@ -7,6 +7,7 @@ using Sitecore.Diagnostics;
 using Sitecore.Eventing;
 using Sitecore.Reflection;
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Sitecore.Support.Tasks
@@ -59,7 +60,7 @@ namespace Sitecore.Support.Tasks
     public void Run()
     {
       DateTime toUtcDate = DateTime.UtcNow.AddMinutes((double)-this.minutesToKeep);
-      foreach (Database database in Factory.GetDatabases())
+      foreach (Database database in Factory.GetDatabases().Where(database => database.RemoteEvents.Queue is SqlEventQueue))
       {
         this.Cleanup(database, toUtcDate);
       }
